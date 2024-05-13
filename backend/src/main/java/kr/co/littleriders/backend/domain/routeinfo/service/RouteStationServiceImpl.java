@@ -1,8 +1,8 @@
 package kr.co.littleriders.backend.domain.routeinfo.service;
 
-import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.routeinfo.RouteStationService;
 import kr.co.littleriders.backend.domain.routeinfo.entity.RouteStation;
+import kr.co.littleriders.backend.domain.routeinfo.error.code.RouteStationErrorCode;
 import kr.co.littleriders.backend.domain.routeinfo.error.exception.RouteStationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ class RouteStationServiceImpl implements RouteStationService {
     @Override
     public RouteStation findById(final long id) {
         return routeStationRepository.findById(id).orElseThrow(
-                () -> RouteStationException.from(RouteErrorCode.NOT_FOUND)
+                () -> RouteStationException.from(RouteStationErrorCode.NOT_FOUND)
         );
     }
 
@@ -44,7 +44,9 @@ class RouteStationServiceImpl implements RouteStationService {
 
     @Override
     public RouteStation findByRouteIdAndStationId(Long routeId, Long stationId) {
-        return routeStationRepository.findByRouteIdAndStationId(routeId, stationId);
+        return routeStationRepository.findByRouteIdAndStationId(routeId, stationId).orElseThrow(
+                () -> RouteStationException.from(RouteStationErrorCode.NOT_FOUND)
+        );
     }
 
 }
