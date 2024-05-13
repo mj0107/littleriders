@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum ShuttleDriveErrorCode implements LittleRidersErrorCode {
 
 
-    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "셔틀 운행 시작 정보를 찾을 수 없습니다.");
+    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "셔틀 운행 시작 정보를 찾을 수 없습니다."),
+    ALREADY_DRIVE(HttpStatus.CONFLICT,"002","이미 셔틀버스가 운행중입니다.");
 
     ShuttleDriveErrorCode(HttpStatus status, String code, String message) {
         this.status = status;

@@ -1,20 +1,18 @@
 package kr.co.littleriders.backend.domain.academy.service;
 
+import jakarta.transaction.Transactional;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyException;
-import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Pageable;
-
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
+@Transactional
 class AcademyServiceImpl implements AcademyService {
 
     private final AcademyRepository academyRepository;

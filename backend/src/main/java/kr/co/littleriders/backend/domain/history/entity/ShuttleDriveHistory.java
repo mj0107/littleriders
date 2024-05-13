@@ -1,9 +1,14 @@
 package kr.co.littleriders.backend.domain.history.entity;
 
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
+import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
+import kr.co.littleriders.backend.global.entity.Gender;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +32,9 @@ public class ShuttleDriveHistory {
     private TeacherInShuttleDriveHistory teacher;
     private List<LocationInShuttleDriveHistory> locationList;
 
+    private List<BoardDropInfoInShuttleDriveHistory> boardList;
+    private List<BoardDropInfoInShuttleDriveHistory> dropList;
+
     private LocalDateTime start;
     private LocalDateTime end;
 
@@ -36,7 +44,9 @@ public class ShuttleDriveHistory {
             ShuttleInShuttleDriveHistory shuttleDriveHistory,
                                 DriverInShuttleDriveHistory driverInShuttleDriveHistory,
                                 TeacherInShuttleDriveHistory teacherInShuttleDriveHistory,
-                                List<LocationInShuttleDriveHistory> locationList
+                                List<LocationInShuttleDriveHistory> locationList,
+                                List<BoardDropInfoInShuttleDriveHistory> boardList,
+                                List<BoardDropInfoInShuttleDriveHistory> dropList
                                 ) {
         this.shuttle = shuttleDriveHistory;
         this.driver = driverInShuttleDriveHistory;
@@ -44,17 +54,18 @@ public class ShuttleDriveHistory {
         this.locationList = locationList;
         this.start = start;
         this.end = end;
+        this.boardList = boardList;
+        this.dropList = dropList;
     }
 
-    //주석처리 - 김도현
-//    public static ShuttleDriveHistory of(LocalDateTime start, LocalDateTime end,Shuttle shuttle, Driver driver, Teacher teacher, List<ShuttleLocationDTO> shuttleLocationDTOList) {
-//
-//        ShuttleInShuttleDriveHistory shuttleInShuttleDriveHistory = ShuttleInShuttleDriveHistory.from(shuttle);
-//        DriverInShuttleDriveHistory driverInShuttleDriveHistory = DriverInShuttleDriveHistory.from(driver);
-//        TeacherInShuttleDriveHistory teacherInShuttleDriveHistory = TeacherInShuttleDriveHistory.from(teacher);
-//        List<LocationInShuttleDriveHistory> locationInShuttleDriveHistoryList = shuttleLocationDTOList.stream().map(LocationInShuttleDriveHistory::from).toList();
-//        return new ShuttleDriveHistory(start,end,shuttleInShuttleDriveHistory, driverInShuttleDriveHistory, teacherInShuttleDriveHistory, locationInShuttleDriveHistoryList);
-//    }
+    public static ShuttleDriveHistory of(LocalDateTime start, LocalDateTime end, Shuttle shuttle, Driver driver, Teacher teacher, List<ShuttleLocation> shuttleLocationList, List<BoardDropInfoInShuttleDriveHistory> boardList, List<BoardDropInfoInShuttleDriveHistory> dropList) {
+
+        ShuttleInShuttleDriveHistory shuttleInShuttleDriveHistory = ShuttleInShuttleDriveHistory.from(shuttle);
+        DriverInShuttleDriveHistory driverInShuttleDriveHistory = DriverInShuttleDriveHistory.from(driver);
+        TeacherInShuttleDriveHistory teacherInShuttleDriveHistory = TeacherInShuttleDriveHistory.from(teacher);
+        List<LocationInShuttleDriveHistory> locationInShuttleDriveHistoryList = shuttleLocationList.stream().map(LocationInShuttleDriveHistory::from).toList();
+        return new ShuttleDriveHistory(start,end,shuttleInShuttleDriveHistory, driverInShuttleDriveHistory, teacherInShuttleDriveHistory, locationInShuttleDriveHistoryList,boardList,dropList);
+    }
 
 
     @Getter
@@ -83,12 +94,14 @@ public class ShuttleDriveHistory {
         private long id;
         private String name;
         private String phoneNumber;
+        private String imagePath;
 
         private static DriverInShuttleDriveHistory from(Driver driver) {
             long id = driver.getId();
             String name = driver.getName();
             String phoneNumber = driver.getPhoneNumber();
-            return new DriverInShuttleDriveHistory(id, name, phoneNumber);
+            String imagePath = driver.getImagePath();
+            return new DriverInShuttleDriveHistory(id, name, phoneNumber,imagePath);
         }
 
     }
@@ -101,12 +114,14 @@ public class ShuttleDriveHistory {
         private long id;
         private String name;
         private String phoneNumber;
+        private String imagePath;
 
         private static TeacherInShuttleDriveHistory from(Teacher teacher) {
             long id = teacher.getId();
             String name = teacher.getName();
             String phoneNumber = teacher.getPhoneNumber();
-            return new TeacherInShuttleDriveHistory(id, name, phoneNumber);
+            String imagePath = teacher.getImagePath();
+            return new TeacherInShuttleDriveHistory(id, name, phoneNumber,imagePath);
         }
     }
 
@@ -131,14 +146,45 @@ public class ShuttleDriveHistory {
         private double latitude;
         private double longitude;
         private LocalDateTime time;
-
-//        private static LocationInShuttleDriveHistory from(ShuttleLocationDTO shuttleLocationDTO) {//주석처리 - 김도현
-//            double latitude = shuttleLocationDTO.getLatitude();
-//            double longitude = shuttleLocationDTO.getLongitude();
-//            LocalDateTime time = shuttleLocationDTO.getTime();
-//            return new LocationInShuttleDriveHistory(latitude, longitude, time);
-//        }
+        private static LocationInShuttleDriveHistory from(ShuttleLocation shuttleLocation) {//주석처리 - 김도현
+            double latitude = shuttleLocation.getLatitude();
+            double longitude = shuttleLocation.getLongitude();
+            LocalDateTime time = shuttleLocation.getTime();
+            return new LocationInShuttleDriveHistory(latitude, longitude, time);
+        }
     }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class BoardDropInfoInShuttleDriveHistory {
+        private double latitude;
+        private double longitude;
+        private LocalDateTime time;
+        private ChildInBoardDropInfoInShuttleDriveHistory child;
+        public static BoardDropInfoInShuttleDriveHistory of(AcademyChild academyChild,double latitude, double longitude, LocalDateTime time) {//주석처리 - 김도현
+            ChildInBoardDropInfoInShuttleDriveHistory childInBoardDropInfoInShuttleDriveHistory = ChildInBoardDropInfoInShuttleDriveHistory.from(academyChild);
+            return new BoardDropInfoInShuttleDriveHistory(latitude, longitude, time, childInBoardDropInfoInShuttleDriveHistory);
+        }
+
+        @Getter
+        @NoArgsConstructor(access = AccessLevel.PRIVATE)
+        @AllArgsConstructor(access = AccessLevel.PROTECTED)
+        public static class ChildInBoardDropInfoInShuttleDriveHistory {
+            private long academyChildId;
+            private String name;
+            @Enumerated(value = EnumType.STRING)
+            private Gender gender;
+            private String imagePath;
+            private static ChildInBoardDropInfoInShuttleDriveHistory from(AcademyChild academychild) {//주석처리 - 김도현
+                return new ChildInBoardDropInfoInShuttleDriveHistory(academychild.getId(),academychild.getName(),academychild.getGender(),academychild.getImagePath());
+            }
+        }
+    }
+
+
+
+
 
 
 }

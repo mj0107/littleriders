@@ -44,7 +44,9 @@ class DriveUniqueKeyServiceImpl implements DriveUniqueKeyService {
 
     @Override
     public DriveUniqueKey findByAcademyChildId(long academyChildId) {
-        return driveUniqueKeyRepository.findByAcademyChildId(academyChildId);
+        return driveUniqueKeyRepository.findByAcademyChildId(academyChildId).orElseThrow(
+                () -> DriveUniqueKeyException.from(DriveUniqueKeyErrorCode.NOT_FOUND)
+        );
     }
 
 

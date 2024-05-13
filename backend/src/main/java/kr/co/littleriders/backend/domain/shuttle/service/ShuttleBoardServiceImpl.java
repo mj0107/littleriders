@@ -54,4 +54,9 @@ class ShuttleBoardServiceImpl implements ShuttleBoardService {
     public boolean notExistsByAcademyChildId(long academyChildId) {
         return !shuttleBoardRepository.existsById(academyChildId);
     }
+
+    @Override
+    public boolean existsByAcademyChildId(long academyChildId) {
+        return shuttleBoardRepository.existsById(academyChildId);
+    }
 }

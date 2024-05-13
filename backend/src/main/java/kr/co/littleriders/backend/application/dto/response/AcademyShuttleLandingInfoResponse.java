@@ -33,14 +33,13 @@ public class AcademyShuttleLandingInfoResponse {
     }
 
 
-    public record Location(double latitude, double longitude, int speed) {
+    public record Location(double latitude, double longitude, int speed,LocalDateTime time) {
         public static Location from(ShuttleLocation shuttleLocation) {
-            return new Location(shuttleLocation.getLatitude(), shuttleLocation.getLongitude(), shuttleLocation.getSpeed());
+            return new Location(shuttleLocation.getLatitude(), shuttleLocation.getLongitude(), shuttleLocation.getSpeed(), shuttleLocation.getTime());
         }
     }
 
     public record BoardDropInfo(Child child, double latitude, double longitude, LocalDateTime time){
-
         public static BoardDropInfo of(Child child, double latitude, double longitude, LocalDateTime time){
             return new BoardDropInfo(child,latitude,longitude,time);
         }

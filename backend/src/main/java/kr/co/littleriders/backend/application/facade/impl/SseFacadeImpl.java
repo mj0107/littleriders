@@ -1,8 +1,10 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
 
+import jakarta.transaction.Transactional;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyShuttleLandingInfoResponse;
+import kr.co.littleriders.backend.application.dto.response.ShuttleEndDriveSseResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleLocationResponse;
 import kr.co.littleriders.backend.application.dto.response.SmsUserShuttleLandingInfoResponse;
 import kr.co.littleriders.backend.application.facade.SseFacade;
@@ -34,11 +36,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SseFacadeImpl implements SseFacade {
 
 
-
-
-
     private final Map<Long, List<SseEmitter>> subscribeMapByShuttleId = new ConcurrentHashMap<>();
-    private final Map<String,List<SseEmitter>> subscribeMapByViewerUuid = new ConcurrentHashMap<>();
+    private final Map<String, List<SseEmitter>> subscribeMapByViewerUuid = new ConcurrentHashMap<>();
     private final Map<Long, List<SseEmitter>> subscribeMapByAcademyId = new ConcurrentHashMap<>();
 
 
@@ -56,7 +55,7 @@ public class SseFacadeImpl implements SseFacade {
 
     private static final long RECONNECTION_TIMEOUT = 1000L;
 
-    private SseEmitter createSse(){
+    private SseEmitter createSse() {
         SseEmitter emitter = new SseEmitter(300000000L);
         emitter.onTimeout(emitter::complete);
         emitter.onError(e -> {
@@ -67,14 +66,73 @@ public class SseFacadeImpl implements SseFacade {
         return emitter;
     }
 
-    public void broadcastBoardDropByShuttleId(long shuttleId){
-        //TODO - 김도현 - WHO IS USER?
+    @Override
+    public void broadcastBoardByAcademyIdAndViewerId(long academyId, String viewerUuid, AcademyChild academyChild, double latitude, double longitude) {
+        broadcastBoardDropByAcademyIdAndViewerId(academyId,viewerUuid,academyChild,latitude,longitude,"board");
+    }
 
+
+    @Override
+    public void broadcastDropByAcademyIdAndViewerId(long academyId, String viewerUuid, AcademyChild academyChild, double latitude, double longitude) {
+        broadcastBoardDropByAcademyIdAndViewerId(academyId,viewerUuid,academyChild,latitude,longitude,"drop");
     }
 
     @Override
-    public SseEmitter createSmsUserSseConnectionByUuid(String uuid){
-        DriveUniqueKey driveUniqueKey =driveUniqueKeyService.findByUuid(uuid);
+    public void broadcastStartDriveByAcademyId(long academyId,ShuttleDrive shuttleDrive) {
+        //shuttleId 로 바꿔도 상관없을거같음.
+        long teacherId = shuttleDrive.getTeacherId();
+        long driverId = shuttleDrive.getDriverId();
+        long routeId = shuttleDrive.getRouteId();
+        long shuttleId = shuttleDrive.getShuttleId();
+
+        if(!subscribeMapByAcademyId.containsKey(academyId)){
+            return;
+        }
+        AcademyShuttleLandingInfoResponse academyShuttleLandingInfoResponse = AcademyShuttleLandingInfoResponse.of(shuttleId, teacherId, driverId, routeId, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        subscribeMapByAcademyId.get(academyId).forEach(sseEmitter -> {
+            try {
+                SseEmitter.SseEventBuilder event = SseEmitter.event()
+                        //event 명 (event: event example)
+                        .name("init")
+                        //event id (id: id-1) - 재연결시 클라이언트에서 `Last-Event-ID` 헤더에 마지막 event id 를 설정
+                        .id(String.valueOf("init"))
+                        //event data payload (data: SSE connected)
+                        .data(academyShuttleLandingInfoResponse)
+                        //SSE 연결이 끊어진 경우 재접속 하기까지 대기 시간 (retry: <RECONNECTION_TIMEOUT>)
+                        .reconnectTime(RECONNECTION_TIMEOUT);
+                sseEmitter.send(event);
+            } catch (Exception ignored) {
+            }
+        });
+    }
+
+    @Override
+    public void broadcastEndDriveByShuttleId(long shuttleId) {
+        if(!subscribeMapByShuttleId.containsKey(shuttleId)){
+            return;
+        }
+
+        ShuttleEndDriveSseResponse shuttleEndDriveSseResponse = ShuttleEndDriveSseResponse.from(shuttleId);
+        subscribeMapByShuttleId.get(shuttleId).forEach(sseEmitter -> {
+            try {
+                SseEmitter.SseEventBuilder event = SseEmitter.event()
+                        //event 명 (event: event example)
+                        .name("end")
+                        //event id (id: id-1) - 재연결시 클라이언트에서 `Last-Event-ID` 헤더에 마지막 event id 를 설정
+                        .id(String.valueOf("end"))
+                        //event data payload (data: SSE connected)
+                        .data(shuttleEndDriveSseResponse)
+                        //SSE 연결이 끊어진 경우 재접속 하기까지 대기 시간 (retry: <RECONNECTION_TIMEOUT>)
+                        .reconnectTime(RECONNECTION_TIMEOUT);
+                sseEmitter.send(event);
+            }catch (Exception ignored){}
+        });
+    }
+
+
+    @Override
+    public SseEmitter createSmsUserSseConnectionByUuid(String uuid) {
+        DriveUniqueKey driveUniqueKey = driveUniqueKeyService.findByUuid(uuid);
         long shuttleId = driveUniqueKey.getShuttleId();
 
         ShuttleDrive shuttleDrive = shuttleDriveService.findByShuttleId(shuttleId);
@@ -93,18 +151,21 @@ public class SseFacadeImpl implements SseFacade {
         //driver to dto
         //shuttle to dto
 
-        SmsUserShuttleLandingInfoResponse smsUserShuttleLandingInfoResponse = SmsUserShuttleLandingInfoResponse.of(teacher,driver,shuttle,shuttleLocationList);
+        SmsUserShuttleLandingInfoResponse smsUserShuttleLandingInfoResponse = SmsUserShuttleLandingInfoResponse.of(teacher, driver, shuttle, shuttleLocationList);
 
         SseEmitter sseEmitter = createSse();
 
-        if(!subscribeMapByViewerUuid.containsKey(uuid)){
-            subscribeMapByViewerUuid.put(uuid,new ArrayList<>());
+        if (!subscribeMapByViewerUuid.containsKey(uuid)) {
+            subscribeMapByViewerUuid.put(uuid, new ArrayList<>());
         }
         subscribeMapByViewerUuid.get(uuid).add(sseEmitter);
+        if(!subscribeMapByShuttleId.containsKey(shuttleId)){
+            subscribeMapByShuttleId.put(shuttleId,new ArrayList<>());
+        }
         subscribeMapByShuttleId.get(shuttleId).add(sseEmitter);
 
 
-        try{
+        try {
             SseEmitter.SseEventBuilder event = SseEmitter.event()
                     //event 명 (event: event example)
                     .name("init")
@@ -115,31 +176,31 @@ public class SseFacadeImpl implements SseFacade {
                     //SSE 연결이 끊어진 경우 재접속 하기까지 대기 시간 (retry: <RECONNECTION_TIMEOUT>)
                     .reconnectTime(RECONNECTION_TIMEOUT);
             sseEmitter.send(event);
+        } catch (Exception ignored) {
         }
-        catch ( Exception ignored){}
-
 
 
         return sseEmitter;
     }
 
 
+
+    @Transactional
     @Override
-    public SseEmitter createAcademySseConnectionByAcademyId(long academyId){
+    public SseEmitter createAcademySseConnectionByAcademyId(long academyId) {
 
         Academy academy = academyService.findById(academyId);
         SseEmitter sseEmitter = createSse();
         List<Long> shuttleIdList = academy.getShuttleList().stream().map(Shuttle::getId).toList();
-        for(Long shuttleId : shuttleIdList){
-            if(!subscribeMapByShuttleId.containsKey(shuttleId)){
-                subscribeMapByShuttleId.put(shuttleId,new ArrayList<>());
+        for (Long shuttleId : shuttleIdList) {
+            if (!subscribeMapByShuttleId.containsKey(shuttleId)) {
+                subscribeMapByShuttleId.put(shuttleId, new ArrayList<>());
             }
             subscribeMapByShuttleId.get(shuttleId).add(sseEmitter);
 
 
-            if(shuttleDriveService.existsByShuttleId(shuttleId)){
+            if (shuttleDriveService.existsByShuttleId(shuttleId)) {
                 //TODO - 김도현 - repository 에서 shuttelId 로 셔틀 운행 시작 정보를 가져와야함
-
                 ShuttleDrive shuttleDrive = shuttleDriveService.findByShuttleId(shuttleId);
 
                 long teacherId = shuttleDrive.getTeacherId();
@@ -154,66 +215,64 @@ public class SseFacadeImpl implements SseFacade {
                 List<ShuttleDrop> shuttleDropList = shuttleDropService.findByShuttleId(shuttleId);
                 List<AcademyShuttleLandingInfoResponse.BoardDropInfo> dropInfoList = new ArrayList<>();
 
-                for(ShuttleDrop shuttleDrop : shuttleDropList){
+                for (ShuttleDrop shuttleDrop : shuttleDropList) {
                     AcademyChild academyChild = academyChildService.findById(shuttleDrop.getAcademyChildId());
                     double latitude = shuttleDrop.getLatitude();
                     double longitude = shuttleDrop.getLongitude();
                     LocalDateTime time = shuttleDrop.getTime();
 
                     AcademyShuttleLandingInfoResponse.Child child = AcademyShuttleLandingInfoResponse.Child.from(academyChild);
-                    dropInfoList.add(AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child,latitude,longitude,time));
+                    dropInfoList.add(AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child, latitude, longitude, time));
 
                 }
 
                 List<ShuttleBoard> shuttleBoardList = shuttleBoardService.findByShuttleId(shuttleId);
                 List<AcademyShuttleLandingInfoResponse.BoardDropInfo> boardInfoList = new ArrayList<>();
-                for(ShuttleBoard shuttleBoard : shuttleBoardList){
+                for (ShuttleBoard shuttleBoard : shuttleBoardList) {
                     AcademyChild academyChild = academyChildService.findById(shuttleBoard.getAcademyChildId());
                     double latitude = shuttleBoard.getLatitude();
                     double longitude = shuttleBoard.getLongitude();
                     LocalDateTime time = shuttleBoard.getTime();
 
                     AcademyShuttleLandingInfoResponse.Child child = AcademyShuttleLandingInfoResponse.Child.from(academyChild);
-                    boardInfoList.add(AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child,latitude,longitude,time));
+                    boardInfoList.add(AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child, latitude, longitude, time));
                 }
 
 
-                try{
+                try {
                     SseEmitter.SseEventBuilder event = SseEmitter.event()
                             //event 명 (event: event example)
                             .name("init")
                             //event id (id: id-1) - 재연결시 클라이언트에서 `Last-Event-ID` 헤더에 마지막 event id 를 설정
                             .id(String.valueOf("init"))
                             //event data payload (data: SSE connected)
-                            .data(AcademyShuttleLandingInfoResponse.of(shuttleId,teacherId,driverId,routeId,shuttleLocationList,boardInfoList,dropInfoList))
+                            .data(AcademyShuttleLandingInfoResponse.of(shuttleId, teacherId, driverId, routeId, shuttleLocationList, boardInfoList, dropInfoList))
                             //SSE 연결이 끊어진 경우 재접속 하기까지 대기 시간 (retry: <RECONNECTION_TIMEOUT>)
                             .reconnectTime(RECONNECTION_TIMEOUT);
                     sseEmitter.send(event);
+                } catch (Exception ignored) {
                 }
-                catch ( Exception ignored){}
+
             }
 
 
         }
-        if(!subscribeMapByAcademyId.containsKey(academyId)){
-            subscribeMapByAcademyId.put(academyId,new ArrayList<>());
+        if (!subscribeMapByAcademyId.containsKey(academyId)) {
+            subscribeMapByAcademyId.put(academyId, new ArrayList<>());
         }
         subscribeMapByAcademyId.get(academyId).add(sseEmitter);
-        return  sseEmitter;
+        return sseEmitter;
     }
-
-
-
 
 
     @Override
     public void broadcastShuttleLocationByShuttleId(long shuttleId, ShuttleLocationRequest shuttleLocationRequest) {
-        if(!subscribeMapByShuttleId.containsKey(shuttleId)){
+        if (!subscribeMapByShuttleId.containsKey(shuttleId)) {
             return;
         }
         subscribeMapByShuttleId.get(shuttleId).forEach(emitter -> {
 
-            ShuttleLocationResponse shuttleLocationResponse = ShuttleLocationResponse.of(shuttleId,shuttleLocationRequest);
+            ShuttleLocationResponse shuttleLocationResponse = ShuttleLocationResponse.of(shuttleId, shuttleLocationRequest);
             try {
                 emitter.send(SseEmitter.event()
                         .name("location")
@@ -224,5 +283,41 @@ public class SseFacadeImpl implements SseFacade {
             }
         });
     }
+
+
+    private void broadcastBoardDropByAcademyIdAndViewerId(long academyId, String viewerUuid, AcademyChild academyChild, double latitude, double longitude,String type){
+        AcademyShuttleLandingInfoResponse.Child child = AcademyShuttleLandingInfoResponse.Child.from(academyChild);
+        AcademyShuttleLandingInfoResponse.BoardDropInfo response = AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child, latitude, longitude, LocalDateTime.now());
+
+
+        //내 아이를 보고있는 사람에게만 전송
+        if (subscribeMapByViewerUuid.containsKey(viewerUuid)) {
+            subscribeMapByViewerUuid.get(viewerUuid).forEach(sseEmitter -> {
+                try {
+                    sseEmitter.send(SseEmitter.event()
+                            .name(type)
+                            .id(type)
+                            .reconnectTime(RECONNECTION_TIMEOUT)
+                            .data(response, MediaType.APPLICATION_JSON));
+                } catch (Exception ignored) {
+                }
+            });
+        }
+        //학원에게 전송
+        if (subscribeMapByAcademyId.containsKey(academyId)) {
+            subscribeMapByAcademyId.get(academyId).forEach(sseEmitter -> {
+                try {
+                    sseEmitter.send(SseEmitter.event()
+                            .name(type)
+                            .id(type)
+                            .reconnectTime(RECONNECTION_TIMEOUT)
+                            .data(response, MediaType.APPLICATION_JSON));
+                } catch (Exception ignored) {
+                }
+            });
+        }
+    }
+
+
 
 }

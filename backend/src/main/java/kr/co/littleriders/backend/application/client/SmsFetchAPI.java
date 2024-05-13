@@ -52,6 +52,9 @@ public class SmsFetchAPI {
     }
 
     private String lmsFetch(MessageDTO messageDTO) {
+        if(messageDTO.getMessages().isEmpty()){
+            return "";
+        }
         final String authorization = generateAuthorization();
         final String BASE_URL = "/send-many/detail";
 

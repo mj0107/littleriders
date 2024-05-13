@@ -34,4 +34,9 @@ class ShuttleDriveServiceImpl implements ShuttleDriveService {
         return shuttleDriveRepository.existsById(shuttleId);
     }
 
+    @Override
+    public boolean notExistsByShuttleId(long shuttleId) {
+        return !shuttleDriveRepository.existsById(shuttleId);
+    }
+
 }

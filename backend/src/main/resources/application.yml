@@ -25,3 +25,6 @@ spring:
     key: ${SMS_KEY}
     secret: ${SMS_SECRET}
     sender: ${SMS_SENDER}
+
+  jpa:
+    open-in-view: false

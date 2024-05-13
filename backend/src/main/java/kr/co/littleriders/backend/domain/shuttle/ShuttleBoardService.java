@@ -21,4 +21,5 @@ public interface ShuttleBoardService {
 	void save(ShuttleBoard shuttleBoard);
 
 	boolean notExistsByAcademyChildId(long academyChildId);
+	boolean existsByAcademyChildId(long academyChildId);
 }

@@ -5,11 +5,12 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 interface DriveUniqueKeyRepository extends CrudRepository<DriveUniqueKey, String> {
 
     List<DriveUniqueKey> findByShuttleId(long shuttleId);
 
-    DriveUniqueKey findByAcademyChildId(long academyChildId);
+    Optional<DriveUniqueKey> findByAcademyChildId(long academyChildId);
 }
