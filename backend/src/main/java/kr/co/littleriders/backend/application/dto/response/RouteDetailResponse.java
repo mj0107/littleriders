@@ -53,7 +53,7 @@ public class RouteDetailResponse {
         @Getter
         @AllArgsConstructor
         public static class ChildInfo {
-            private Long id;
+            private Long academyChildId;
             private String name;
         }
     }
