@@ -27,7 +27,7 @@ public class ShuttleDailyHistoryResponse {
 
 	public static ShuttleDailyHistoryResponse from(ShuttleDriveHistory shuttleDriveHistory) {
 		return new ShuttleDailyHistoryResponse(shuttleDriveHistory.getDocumentId(),
-											null,
+											shuttleDriveHistory.getRouteName(),
 											shuttleDriveHistory.getStart().toLocalTime(),
 											shuttleDriveHistory.getEnd().toLocalTime());
 	}

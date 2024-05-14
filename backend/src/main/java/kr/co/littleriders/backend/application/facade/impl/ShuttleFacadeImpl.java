@@ -55,6 +55,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -195,14 +196,14 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         ShuttleDrive shuttleDrive = shuttleDriveService.findByShuttleId(shuttleId);
         long driverId = shuttleDrive.getDriverId();
         long teacherId = shuttleDrive.getTeacherId();
+        long routeId = shuttleDrive.getRouteId();
 
+        Route route = routeService.findById(routeId);
         Driver driver = driverService.findById(driverId);
         Teacher teacher = teacherService.findById(teacherId);
         Shuttle shuttle  = shuttleService.findById(shuttleId);
         LocalDateTime start = shuttleDrive.getTime();
         LocalDateTime end = LocalDateTime.now();
-
-
 
 
         //TODO - 김도현 - 어린이 저장 및 정상 종료 여부 확인하기
@@ -219,6 +220,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         //지나왔던길 모두 가져오기
         List<ShuttleLocation> shuttleLocationList = shuttleLocationService.findByShuttleId(shuttleId);
+        shuttleLocationList.sort(Comparator.comparing(ShuttleLocation::getTime));
 
         //TODO - 김도현 - 승차 하차정보 모두 저장해야함.
 
@@ -240,7 +242,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
                     shuttleDrop.getTime()));
         }
 
-        ShuttleDriveHistory shuttleDriveHistory = ShuttleDriveHistory.of(start,end,shuttle,driver,teacher,shuttleLocationList,boardList,dropList);
+        ShuttleDriveHistory shuttleDriveHistory = ShuttleDriveHistory.of(route.getName(),start,end,shuttle,driver,teacher,shuttleLocationList,boardList,dropList);
         shuttleDriveHistoryService.save(shuttleDriveHistory);
 
         shuttleDriveService.delete(shuttleDrive);

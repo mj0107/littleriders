@@ -52,14 +52,6 @@ class AcademyServiceImpl implements AcademyService {
     }
 
     @Override
-    public Slice<Academy> findByName(String name, Pageable pageable) {
-
-        Slice<Academy> academyList = academyRepository.findByName(name, pageable);
-
-        return academyList;
-    }
-
-    @Override
     public long save(Academy academy) {
         return academyRepository.save(academy).getId();
     }

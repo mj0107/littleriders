@@ -18,7 +18,5 @@ public interface AcademyService {
 
     boolean notExistsByEmail(String email);
 
-    Slice<Academy> findByName(String name, Pageable pageable);
-
     long save(Academy academy);
 }

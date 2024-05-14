@@ -35,10 +35,12 @@ public class ShuttleDriveHistory {
     private List<BoardDropInfoInShuttleDriveHistory> boardList;
     private List<BoardDropInfoInShuttleDriveHistory> dropList;
 
+    private String routeName;
     private LocalDateTime start;
     private LocalDateTime end;
 
     private ShuttleDriveHistory(
+            String routeName,
             LocalDateTime start,
             LocalDateTime end,
             ShuttleInShuttleDriveHistory shuttleDriveHistory,
@@ -52,19 +54,20 @@ public class ShuttleDriveHistory {
         this.driver = driverInShuttleDriveHistory;
         this.teacher = teacherInShuttleDriveHistory;
         this.locationList = locationList;
+        this.routeName = routeName;
         this.start = start;
         this.end = end;
         this.boardList = boardList;
         this.dropList = dropList;
     }
 
-    public static ShuttleDriveHistory of(LocalDateTime start, LocalDateTime end, Shuttle shuttle, Driver driver, Teacher teacher, List<ShuttleLocation> shuttleLocationList, List<BoardDropInfoInShuttleDriveHistory> boardList, List<BoardDropInfoInShuttleDriveHistory> dropList) {
+    public static ShuttleDriveHistory of(String routeName, LocalDateTime start, LocalDateTime end, Shuttle shuttle, Driver driver, Teacher teacher, List<ShuttleLocation> shuttleLocationList, List<BoardDropInfoInShuttleDriveHistory> boardList, List<BoardDropInfoInShuttleDriveHistory> dropList) {
 
         ShuttleInShuttleDriveHistory shuttleInShuttleDriveHistory = ShuttleInShuttleDriveHistory.from(shuttle);
         DriverInShuttleDriveHistory driverInShuttleDriveHistory = DriverInShuttleDriveHistory.from(driver);
         TeacherInShuttleDriveHistory teacherInShuttleDriveHistory = TeacherInShuttleDriveHistory.from(teacher);
         List<LocationInShuttleDriveHistory> locationInShuttleDriveHistoryList = shuttleLocationList.stream().map(LocationInShuttleDriveHistory::from).toList();
-        return new ShuttleDriveHistory(start,end,shuttleInShuttleDriveHistory, driverInShuttleDriveHistory, teacherInShuttleDriveHistory, locationInShuttleDriveHistoryList,boardList,dropList);
+        return new ShuttleDriveHistory(routeName, start, end, shuttleInShuttleDriveHistory, driverInShuttleDriveHistory, teacherInShuttleDriveHistory, locationInShuttleDriveHistoryList, boardList, dropList);
     }
 
 
@@ -123,20 +126,6 @@ public class ShuttleDriveHistory {
             String imagePath = teacher.getImagePath();
             return new TeacherInShuttleDriveHistory(id, name, phoneNumber,imagePath);
         }
-    }
-
-    @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class ChildBoard {
-        private long childId;
-        private long academyChildId;
-        private String name;
-        private String address;
-        private double latitude;
-        private double longitude;
-        private LocalDateTime time;
-
     }
 
     @Getter

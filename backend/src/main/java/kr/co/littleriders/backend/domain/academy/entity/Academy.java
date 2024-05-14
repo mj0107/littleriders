@@ -2,7 +2,6 @@ package kr.co.littleriders.backend.domain.academy.entity;
 
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
-import kr.co.littleriders.backend.domain.history.entity.BoardDropHistory;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.station.entity.Station;
@@ -70,9 +69,6 @@ public class Academy implements Member {
 
     @OneToMany(mappedBy = "academy")
     private List<Route> routeList; // 경로 목록
-
-    @OneToMany(mappedBy = "academy")
-    private List<BoardDropHistory> boardDropHistoryList; // 원생 탑승 이력 목록
 
     @OneToMany(mappedBy = "academy")
     private List<AcademyChild> academyChildList = new ArrayList<>(); // 원생정보 목록

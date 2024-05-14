@@ -3,9 +3,9 @@ package kr.co.littleriders.backend.application.facade.impl;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.littleriders.backend.application.dto.response.ShuttleDailyHistoryResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleDetailHistoryResponse;
@@ -29,6 +29,7 @@ public class HistoryFacadeImpl implements HistoryFacade {
 	private final AcademyService academyService;
 
 	@Override
+	@Transactional
 	public List<LocalDateTime> readShuttleDateList(Long shuttleId, Long academyId) {
 
 		Academy academy = academyService.findById(academyId);
@@ -41,10 +42,12 @@ public class HistoryFacadeImpl implements HistoryFacade {
 	}
 
 	@Override
+	@Transactional
 	public List<ShuttleDailyHistoryResponse> readShuttleDailyHistory(Long academyId, Long shuttleId, LocalDate date) {
 
 		Academy academy = academyService.findById(academyId);
 		Shuttle shuttle = shuttleService.findById(shuttleId);
+
 		if (!shuttle.equalsAcademy(academy)) {
 			throw ShuttleException.from(ShuttleErrorCode.FORBIDDEN);
 		}
@@ -59,6 +62,7 @@ public class HistoryFacadeImpl implements HistoryFacade {
 	}
 
 	@Override
+	@Transactional
 	public ShuttleDetailHistoryResponse readShuttleDetailHistory(Long academyId, String historyId) {
 
 		Academy academy = academyService.findById(academyId);
