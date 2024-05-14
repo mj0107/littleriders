@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -21,17 +22,14 @@ public class SmsUserShuttleLandingInfoResponse {
     private final List<LocationInSmsUserShuttleLandingInfoResponse> locationList;
 
 
-    public static SmsUserShuttleLandingInfoResponse of(Teacher teacher, Driver driver, Shuttle shuttle, List<ShuttleLocation> shuttleLocationList){
+    public static SmsUserShuttleLandingInfoResponse of(Teacher teacher, Driver driver, Shuttle shuttle, List<ShuttleLocation> shuttleLocationList) {
         PersonInSmsUserShuttleLandingInfoResponse teacherDTO = PersonInSmsUserShuttleLandingInfoResponse.from(teacher);
         PersonInSmsUserShuttleLandingInfoResponse driverDTO = PersonInSmsUserShuttleLandingInfoResponse.from(driver);
         ShuttleInSmsUserShuttleLandingInfoResponse shuttleDTO = ShuttleInSmsUserShuttleLandingInfoResponse.from(shuttle);
         List<LocationInSmsUserShuttleLandingInfoResponse> locationDTOList = LocationInSmsUserShuttleLandingInfoResponse.from(shuttleLocationList);
-        return new SmsUserShuttleLandingInfoResponse(teacherDTO,driverDTO,shuttleDTO,locationDTOList);
+        return new SmsUserShuttleLandingInfoResponse(teacherDTO, driverDTO, shuttleDTO, locationDTOList);
 
     }
-
-
-
 
 
     @Getter
@@ -76,13 +74,14 @@ public class SmsUserShuttleLandingInfoResponse {
         private final double latitude;
         private final double longitude;
         private final int speed;
+        private final LocalDateTime time;
 
         public static List<LocationInSmsUserShuttleLandingInfoResponse> from(List<ShuttleLocation> shuttleLocationList) {
             return shuttleLocationList.stream().map(LocationInSmsUserShuttleLandingInfoResponse::from).toList();
         }
 
         private static LocationInSmsUserShuttleLandingInfoResponse from(ShuttleLocation shuttleLocation) {
-            return new LocationInSmsUserShuttleLandingInfoResponse(shuttleLocation.getLatitude(), shuttleLocation.getLongitude(), shuttleLocation.getSpeed());
+            return new LocationInSmsUserShuttleLandingInfoResponse(shuttleLocation.getLatitude(), shuttleLocation.getLongitude(), shuttleLocation.getSpeed(), shuttleLocation.getTime());
         }
     }
 }
