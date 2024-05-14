@@ -64,18 +64,4 @@ class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 		return shuttleList;
 	}
 
-	@Override
-	public Map<String, Object> readShuttleImage(Long academyId, Long shuttleId) {
-
-		Academy academy = academyService.findById(academyId);
-		Shuttle shuttle = shuttleService.findById(shuttleId);
-		if (!shuttle.equalsAcademy(academy)) {
-			throw ShuttleException.from(ShuttleErrorCode.FORBIDDEN);
-		}
-
-		String imagePath = shuttle.getImagePath();
-		Map<String, Object> result = imageUtil.getImage(imagePath);
-
-		return result;
-	}
 }

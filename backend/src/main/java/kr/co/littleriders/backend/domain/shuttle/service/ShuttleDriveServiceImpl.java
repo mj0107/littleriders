@@ -6,13 +6,17 @@ import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleDriveErrorCod
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleDriveException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class ShuttleDriveServiceImpl implements ShuttleDriveService {
+
     private final ShuttleDriveRepository shuttleDriveRepository;
 
     @Override
+    @Transactional
     public void save(ShuttleDrive shuttleDrive) {
         shuttleDriveRepository.save(shuttleDrive);
     }
@@ -25,6 +29,7 @@ class ShuttleDriveServiceImpl implements ShuttleDriveService {
     }
 
     @Override
+    @Transactional
     public void delete(ShuttleDrive shuttleDrive) {
         shuttleDriveRepository.delete(shuttleDrive);
     }

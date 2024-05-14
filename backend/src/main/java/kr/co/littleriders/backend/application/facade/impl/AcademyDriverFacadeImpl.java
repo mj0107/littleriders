@@ -59,18 +59,4 @@ class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 		return driverList;
 	}
 
-	@Override
-	public Map<String, Object> readDriverImage(Long academyId, Long driverId) {
-
-		Academy academy = academyService.findById(academyId);
-		Driver driver = driverService.findById(driverId);
-		if (!driver.equalsAcademy(academy)) {
-			throw DriverException.from(DriverErrorCode.ILLEGAL_ACCESS);
-		}
-
-		String imagePath = driver.getImagePath();
-		Map<String, Object> result = imageUtil.getImage(imagePath);
-
-		return result;
-	}
 }

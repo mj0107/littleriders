@@ -8,11 +8,13 @@ import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class RouteServiceImpl implements RouteService {
 
     private final RouteRepository routeRepository;
@@ -40,20 +42,24 @@ class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    @Transactional
     public long save(Route route) {
         return routeRepository.save(route).getId();
     }
+
     @Override
     public List<Route> findAllByAcademy(Academy academy) {
         return routeRepository.findAllByAcademy(academy);
     }
 
     @Override
+    @Transactional
     public void updateRoute(Route route, RouteRequest routeRequest) {
         route.update(routeRequest);
     }
 
     @Override
+    @Transactional
     public void deleteRoute(Route route) {
         routeRepository.delete(route);
     }

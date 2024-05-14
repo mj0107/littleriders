@@ -13,5 +13,4 @@ public interface AcademyShuttleFacade {
 
 	List<AcademyShuttleResponse> readShuttleList(Long academyId);
 
-	Map<String, Object> readShuttleImage(Long academyId, Long shuttleId);
 }

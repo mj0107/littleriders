@@ -46,24 +46,4 @@ public class AcademyDriverController {
 		return ResponseEntity.ok().body(driverList);
 	}
 
-	@GetMapping("/{driverId}/image")
-	public ResponseEntity<Resource> getDriverImage(@Auth AuthAcademy authAcademy,
-												   @PathVariable(value = "driverId") Long driverId) {
-
-		Long academyId = authAcademy.getId();
-
-		Map<String, Object> image = academyDriverFacade.readDriverImage(academyId, driverId);
-
-		Resource imageResource = (Resource) image.get("resource");
-		MediaType mediaType = (MediaType) image.get("mediaType");
-
-		HttpHeaders headers = new HttpHeaders();
-		if (mediaType != null) {
-			headers.setContentType(mediaType);
-		} else {
-			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		}
-
-		return ResponseEntity.ok().headers(headers).body(imageResource);
-	}
 }

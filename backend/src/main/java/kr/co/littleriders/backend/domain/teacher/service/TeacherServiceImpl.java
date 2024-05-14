@@ -8,12 +8,15 @@ import kr.co.littleriders.backend.domain.teacher.error.exception.TeacherExceptio
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 class TeacherServiceImpl implements TeacherService {
+
     private final TeacherRepository teacherRepository;
 
     @Override
@@ -34,6 +37,7 @@ class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    @Transactional
     public long save(final Teacher teacher) {
         return teacherRepository.save(teacher).getId();
     }

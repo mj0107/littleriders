@@ -45,24 +45,4 @@ public class AcademyTeacherController {
 		return ResponseEntity.ok().body(teacherList);
 	}
 
-	@GetMapping("/{teacherId}/image")
-	public ResponseEntity<Resource> getTeacherImage(@Auth AuthAcademy authAcademy,
-													@PathVariable(value = "teacherId") Long teacherId) {
-
-		Long academyId = authAcademy.getId();
-
-		Map<String, Object> image = academyTeacherFacade.readTeacherImage(academyId, teacherId);
-
-		Resource imageResource = (Resource) image.get("resource");
-		MediaType mediaType = (MediaType) image.get("mediaType");
-
-		HttpHeaders headers = new HttpHeaders();
-		if (mediaType != null) {
-			headers.setContentType(mediaType);
-		} else {
-			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		}
-
-		return ResponseEntity.ok().headers(headers).body(imageResource);
-	}
 }

@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface StationService {
 
-
     Station findById(long id);
 
     boolean existsById(long id);

@@ -5,6 +5,7 @@ import kr.co.littleriders.backend.domain.shuttle.ShuttleDropService;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleDrop;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,39 +14,28 @@ import java.util.List;
 class ShuttleDropServiceImpl implements ShuttleDropService {
 
     private final ShuttleDropRepository shuttleDropRepository;
-    @Override
-    public ShuttleDrop findByAcademyChildId(long academyChildId) {
-        return shuttleDropRepository.findById(academyChildId).orElseThrow();
-    }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ShuttleDrop> findByShuttleId(long shuttleId) {
         return shuttleDropRepository.findByShuttleId(shuttleId);
     }
 
     @Override
-    public List<ShuttleDrop> findByAcademyId(long academyId) {
-        return shuttleDropRepository.findByAcademyId(academyId);
-    }
-
-    @Override
+    @Transactional
     public void deleteAllByShuttleId(long shuttleId) {
         List<ShuttleDrop> shuttleDropList = shuttleDropRepository.findByShuttleId(shuttleId);
         shuttleDropRepository.deleteAll(shuttleDropList);
     }
 
     @Override
-    public void deleteAllByAcademyId(long academyId) {
-        List<ShuttleDrop> shuttleDropList  =shuttleDropRepository.findByAcademyId(academyId);
-        shuttleDropRepository.deleteAll(shuttleDropList);
-    }
-
-    @Override
+    @Transactional
     public void delete(ShuttleDrop shuttleDrop) {
         shuttleDropRepository.delete(shuttleDrop);
     }
 
     @Override
+    @Transactional
     public void save(ShuttleDrop shuttleDrop) {
         shuttleDropRepository.save(shuttleDrop);
     }

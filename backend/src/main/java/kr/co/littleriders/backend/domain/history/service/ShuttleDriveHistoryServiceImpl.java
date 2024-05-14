@@ -6,6 +6,7 @@ import kr.co.littleriders.backend.domain.history.error.code.ShuttleDriveHistoryE
 import kr.co.littleriders.backend.domain.history.error.exception.ShuttleDriveHistoryException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,7 +17,9 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class ShuttleDriveHistoryServiceImpl implements ShuttleDriveHistoryService {
+
     private final ShuttleDriveHistoryRepository shuttleDriveHistoryRepository;
 
     @Override
@@ -27,6 +30,7 @@ class ShuttleDriveHistoryServiceImpl implements ShuttleDriveHistoryService {
     }
 
     @Override
+    @Transactional
     public String save(ShuttleDriveHistory shuttleDriveHistory) {
         return shuttleDriveHistoryRepository.save(shuttleDriveHistory).getDocumentId();
     }

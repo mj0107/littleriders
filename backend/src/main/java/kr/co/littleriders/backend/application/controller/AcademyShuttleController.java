@@ -45,25 +45,4 @@ public class AcademyShuttleController {
 		return ResponseEntity.ok().body(shuttleList);
 	}
 
-	@GetMapping("/{shuttleId}/image")
-	public ResponseEntity<Resource> getShuttleImage(@Auth AuthAcademy authAcademy,
-												   @PathVariable(value = "shuttleId") Long shuttleId) {
-
-		Long academyId = authAcademy.getId();
-
-		Map<String, Object> image = academyShuttleFacade.readShuttleImage(academyId, shuttleId);
-
-		Resource imageResource = (Resource) image.get("resource");
-		MediaType mediaType = (MediaType) image.get("mediaType");
-
-		HttpHeaders headers = new HttpHeaders();
-		if (mediaType != null) {
-			headers.setContentType(mediaType);
-		} else {
-			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		}
-
-		return ResponseEntity.ok().headers(headers).body(imageResource);
-	}
-
 }

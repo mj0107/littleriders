@@ -6,11 +6,13 @@ import kr.co.littleriders.backend.domain.routeinfo.error.code.RouteStationErrorC
 import kr.co.littleriders.backend.domain.routeinfo.error.exception.RouteStationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class RouteStationServiceImpl implements RouteStationService {
     private final RouteStationRepository routeStationRepository;
 
@@ -20,7 +22,6 @@ class RouteStationServiceImpl implements RouteStationService {
                 () -> RouteStationException.from(RouteStationErrorCode.NOT_FOUND)
         );
     }
-
 
     @Override
     public boolean existsById(final long id) {
@@ -33,11 +34,13 @@ class RouteStationServiceImpl implements RouteStationService {
     }
 
     @Override
+    @Transactional
     public long save(RouteStation routeStation) {
         return routeStationRepository.save(routeStation).getId();
     }
 
     @Override
+    @Transactional
     public void saveAll(List<RouteStation> routeStationList) {
         routeStationRepository.saveAll(routeStationList);
     }

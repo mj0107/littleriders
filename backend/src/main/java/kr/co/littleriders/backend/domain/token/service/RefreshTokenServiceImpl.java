@@ -6,13 +6,13 @@ import kr.co.littleriders.backend.domain.token.error.code.RefreshTokenErrorCode;
 import kr.co.littleriders.backend.domain.token.error.exception.RefreshTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public final class RefreshTokenServiceImpl implements RefreshTokenService { //write and check 만 한다.
+final class RefreshTokenServiceImpl implements RefreshTokenService { //write and check 만 한다.
 
     private final RefreshTokenRepository refreshTokenRepository;
-
 
     @Override
     public RefreshToken findByToken(String token) {

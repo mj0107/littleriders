@@ -10,16 +10,13 @@ public interface ShuttleBoardService {
 
 	List<ShuttleBoard> findByShuttleId(long shuttleId);
 
-	List<ShuttleBoard> findByAcademyId(long academyId);
-
 	void deleteAllByShuttleId(long shuttleId);
-
-	void deleteAllByAcademyId(long academyId);
 
 	void delete(ShuttleBoard shuttleBoard);
 
 	void save(ShuttleBoard shuttleBoard);
 
 	boolean notExistsByAcademyChildId(long academyChildId);
+
 	boolean existsByAcademyChildId(long academyChildId);
 }

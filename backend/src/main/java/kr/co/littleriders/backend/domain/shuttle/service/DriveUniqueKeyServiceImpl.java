@@ -6,15 +6,19 @@ import kr.co.littleriders.backend.domain.shuttle.error.code.DriveUniqueKeyErrorC
 import kr.co.littleriders.backend.domain.shuttle.error.exception.DriveUniqueKeyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class DriveUniqueKeyServiceImpl implements DriveUniqueKeyService {
+
     private final DriveUniqueKeyRepository driveUniqueKeyRepository;
 
     @Override
+    @Transactional
     public void save(DriveUniqueKey driveUniqueKey) {
         driveUniqueKeyRepository.save(driveUniqueKey);
     }
@@ -25,11 +29,13 @@ class DriveUniqueKeyServiceImpl implements DriveUniqueKeyService {
     }
 
     @Override
+    @Transactional
     public void delete(DriveUniqueKey driveUniqueKey) {
         driveUniqueKeyRepository.delete(driveUniqueKey);
     }
 
     @Override
+    @Transactional
     public void deleteAllByShuttleId(long shuttleId) {
         List<DriveUniqueKey> driveUniqueKeyList = driveUniqueKeyRepository.findByShuttleId(shuttleId);
         driveUniqueKeyRepository.deleteAll(driveUniqueKeyList);

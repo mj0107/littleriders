@@ -7,10 +7,13 @@ import kr.co.littleriders.backend.domain.terminal.error.exception.TerminalExcept
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 class TerminalServiceImpl implements TerminalService {
+
     private final TerminalRepository terminalRepository;
 
     @Override
@@ -22,13 +25,11 @@ class TerminalServiceImpl implements TerminalService {
 
     @Override
     public Terminal findByTerminalNumber(String terminalNumber) {
-
         return terminalRepository.findByTerminalNumber(terminalNumber).orElseThrow(
                 () -> TerminalException.from(TerminalErrorCode.NOT_FOUND)
         );
 
     }
-
 
     @Override
     public boolean existsById(final long id) {
@@ -41,6 +42,7 @@ class TerminalServiceImpl implements TerminalService {
     }
 
     @Override
+    @Transactional
     public long save(final Terminal terminal) {
         return terminalRepository.save(terminal).getId();
     }

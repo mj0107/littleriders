@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface ShuttleLocationService {
 
-
     List<ShuttleLocation> findByShuttleId(long shuttleId);
+
     void save(ShuttleLocation shuttleLocation);
 
     void delete(ShuttleLocation shuttleLocation);

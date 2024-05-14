@@ -8,12 +8,15 @@ import kr.co.littleriders.backend.domain.driver.error.exception.DriverException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 class DriverServiceImpl implements DriverService {
+
     private final DriverRepository driverRepository;
 
     @Override
@@ -34,6 +37,7 @@ class DriverServiceImpl implements DriverService {
     }
 
     @Override
+    @Transactional
     public long save(Driver driver) {
         return driverRepository.save(driver).getId();
     }

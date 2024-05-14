@@ -13,5 +13,4 @@ public interface AcademyTeacherFacade {
 
 	List<AcademyTeacherResponse> readTeacherList(Long academyId);
 
-	Map<String, Object> readTeacherImage(Long academyId, Long teacherId);
 }

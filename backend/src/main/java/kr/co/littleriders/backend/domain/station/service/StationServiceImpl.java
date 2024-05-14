@@ -7,12 +7,14 @@ import kr.co.littleriders.backend.domain.station.error.code.StationErrorCode;
 import kr.co.littleriders.backend.domain.station.error.exception.StationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class StationServiceImpl implements StationService {
 
     private final StationRepository stationRepository;
@@ -38,6 +40,7 @@ class StationServiceImpl implements StationService {
     }
 
     @Override
+    @Transactional
     public long save(Station station) {
         return stationRepository.save(station).getId();
     }
@@ -48,11 +51,13 @@ class StationServiceImpl implements StationService {
     }
 
     @Override
+    @Transactional
     public void updateStation(Station station, StationRequest stationRequest) {
         station.update(stationRequest);
     }
 
     @Override
+    @Transactional
     public void deleteStation(Station station) {
         stationRepository.delete(station);
     }

@@ -40,7 +40,7 @@ class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 		Teacher teacher = teacherRegistRequest.toEntity(academy);
 
 		MultipartFile image = teacherRegistRequest.getImage();
-		if(image != null){
+		if (image != null) {
 			String imagePath = imageUtil.saveImage(image);
 			teacher.setImagePath(imagePath);
 		}
@@ -52,26 +52,12 @@ class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 
 		Academy academy = academyService.findById(academyId);
 		List<AcademyTeacherResponse> teacherList = teacherService.findByAcademy(academy)
-													.stream()
-													.sorted(Comparator.comparing(teacher -> teacher.getStatus() == TeacherStatus.WORK ? 0 : 1))
-													.map(AcademyTeacherResponse::from)
-													.collect(Collectors.toList());
+			.stream()
+			.sorted(Comparator.comparing(teacher -> teacher.getStatus() == TeacherStatus.WORK ? 0 : 1))
+			.map(AcademyTeacherResponse::from)
+			.collect(Collectors.toList());
 
 		return teacherList;
 	}
 
-	@Override
-	public Map<String, Object> readTeacherImage(Long academyId, Long teacherId) {
-
-		Academy academy = academyService.findById(academyId);
-		Teacher teacher = teacherService.findById(teacherId);
-		if (!teacher.equalsAcademy(academy)) {
-			throw TeacherException.from(TeacherErrorCode.ILLEGAL_ACCESS);
-		}
-
-		String imagePath = teacher.getImagePath();
-		Map<String, Object> result = imageUtil.getImage(imagePath);
-
-		return result;
-	}
 }

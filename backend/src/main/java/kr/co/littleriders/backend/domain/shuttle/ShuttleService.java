@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface ShuttleService {
 
-
 	Shuttle findById(long id);
 
 	boolean existsById(long id);

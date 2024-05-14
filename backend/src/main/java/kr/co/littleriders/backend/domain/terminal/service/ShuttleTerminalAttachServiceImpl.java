@@ -7,12 +7,14 @@ import kr.co.littleriders.backend.domain.terminal.error.exception.ShuttleTermina
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 class ShuttleTerminalAttachServiceImpl implements ShuttleTerminalAttachService {
-    private final ShuttleTerminalAttachRepository shuttleTerminalAttachRepository;
 
+    private final ShuttleTerminalAttachRepository shuttleTerminalAttachRepository;
 
     @Override
     public ShuttleTerminalAttach findById(final long id) {
@@ -33,6 +35,7 @@ class ShuttleTerminalAttachServiceImpl implements ShuttleTerminalAttachService {
     }
 
     @Override
+    @Transactional
     public long save(final ShuttleTerminalAttach shuttleTerminalAttach) {
         return shuttleTerminalAttachRepository.save(shuttleTerminalAttach).getId();
     }

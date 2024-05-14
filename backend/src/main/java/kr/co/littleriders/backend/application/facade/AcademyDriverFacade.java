@@ -11,5 +11,4 @@ public interface AcademyDriverFacade {
 
 	List<AcademyDriverResponse> readDriverList(Long academyId);
 
-    Map<String, Object> readDriverImage(Long academyId, Long driverId);
 }

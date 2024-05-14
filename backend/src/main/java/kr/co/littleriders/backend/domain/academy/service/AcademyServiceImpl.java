@@ -1,18 +1,16 @@
 package kr.co.littleriders.backend.domain.academy.service;
 
-import jakarta.transaction.Transactional;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 class AcademyServiceImpl implements AcademyService {
 
     private final AcademyRepository academyRepository;
@@ -52,6 +50,7 @@ class AcademyServiceImpl implements AcademyService {
     }
 
     @Override
+    @Transactional
     public long save(Academy academy) {
         return academyRepository.save(academy).getId();
     }

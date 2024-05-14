@@ -3,6 +3,7 @@ package kr.co.littleriders.backend.domain.beacon.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.beacon.BeaconServcie;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class BeaconServiceImpl implements BeaconServcie {
 
 	private final BeaconRepository beaconRepository;
@@ -28,6 +30,7 @@ class BeaconServiceImpl implements BeaconServcie {
 	}
 
 	@Override
+	@Transactional
 	public void save(Beacon beacon) {
 		beaconRepository.save(beacon);
 	}

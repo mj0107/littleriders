@@ -8,12 +8,15 @@ import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleExceptio
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 class ShuttleServiceImpl implements ShuttleService {
+
     private final ShuttleRepository shuttleRepository;
 
     @Override
@@ -34,6 +37,7 @@ class ShuttleServiceImpl implements ShuttleService {
     }
 
     @Override
+    @Transactional
     public long save(Shuttle shuttle) {
         return shuttleRepository.save(shuttle).getId();
     }
