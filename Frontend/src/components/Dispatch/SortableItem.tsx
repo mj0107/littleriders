@@ -35,7 +35,7 @@ export default function SortableItem({
   const [isClicked, setIsClicked] = useState<boolean>(false)
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false)
   const [childCount, setChildCount] = useState<number | undefined>(
-    childList?.length,
+    childList ? childList.length : 0,
   )
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id })
@@ -52,7 +52,7 @@ export default function SortableItem({
       return <p className="w-8 text-center text-xl font-bold">{index}</p>
     if (type === 'stationList')
       return <img src="/bus-stop-icon.svg" className="w-8" />
-    if (type.includes('childList')) return <></>
+    if (type.includes('academyChildList')) return <></>
   }
 
   const stationTailIcon = (type: string | undefined) => {
@@ -77,7 +77,7 @@ export default function SortableItem({
   }
 
   useEffect(() => {
-    setChildCount(childList?.length)
+    setChildCount(childList ? childList.length : 0)
   }, [childList])
 
   useEffect(() => {

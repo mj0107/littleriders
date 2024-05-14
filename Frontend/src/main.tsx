@@ -9,6 +9,8 @@ async function enableMocking() {
     return
   }
 
+  return
+
   const { worker } = await import('@mocks/browser')
 
   return worker.start()

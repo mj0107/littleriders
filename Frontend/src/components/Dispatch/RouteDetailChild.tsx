@@ -73,8 +73,8 @@ export default function RouteDetailChild({
     >
       <SortableContainer
         subject="모든 어린이"
-        id="childList"
-        items={childItems['childList']}
+        id="academyChildList"
+        items={childItems['academyChildList']}
         isDisabled={childDragDisabled}
         isLoading={isRouteDetailLoading}
         isPending={isRouteDetailPending}
@@ -89,7 +89,7 @@ export default function RouteDetailChild({
       />
       {createPortal(
         <DragOverlay>
-          <SortableItem id={activeChildId!} name={activeChildName} index={0} />
+          <SortableItem id={activeChildId!} name={activeChildName} index={-1} />
         </DragOverlay>,
         document.getElementById('root')!,
       )}

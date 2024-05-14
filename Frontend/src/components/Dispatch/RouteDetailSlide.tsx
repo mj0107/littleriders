@@ -54,7 +54,7 @@ export default function RouteDetailSlide({
   const [activeChildName, setActiveChildName] = useState<string>('')
   const [childItems, setChildItems] = useState<{
     [key: string]: ChildInfo[]
-  }>({ childList: [], selectedChildList: [] })
+  }>({ academyChildList: [], selectedChildList: [] })
 
   const [selectedStation, setSelectedStation] = useState<number>(-1)
   // const [hoveredStation, setHoveredStation] = useState<number>(-1)
@@ -140,10 +140,14 @@ export default function RouteDetailSlide({
         visitOrder: k,
       })
       const academyChildIdList: number[] = []
-      if (selectedStationListTemp[k].childList) {
-        for (let s = 0; s < selectedStationListTemp[k].childList!.length; s++) {
+      if (selectedStationListTemp[k].academyChildList) {
+        for (
+          let s = 0;
+          s < selectedStationListTemp[k].academyChildList!.length;
+          s++
+        ) {
           academyChildIdList.push(
-            selectedStationListTemp[k].childList![s].academyChildId,
+            selectedStationListTemp[k].academyChildList![s].academyChildId,
           )
         }
       }
@@ -175,12 +179,22 @@ export default function RouteDetailSlide({
       const temp = stationItems.selectedStationList.find(
         (station) => station.id === selectedStation,
       )
-      if (temp && temp.childList) {
+      if (temp) {
         setChildDragDisabled(false)
-        setChildItems((prev) => ({
-          ...prev,
-          selectedChildList: [...temp.childList!],
-        }))
+        if (!temp.academyChildList) {
+          setChildItems((prev) => {
+            if (!temp.academyChildList) {
+              return {
+                ...prev,
+                selectedChildList: [],
+              }
+            }
+            return {
+              ...prev,
+              selectedChildList: [...temp.academyChildList],
+            }
+          })
+        }
       } else {
         setChildDragDisabled(true)
         setChildItems((prev) => ({
@@ -189,15 +203,15 @@ export default function RouteDetailSlide({
         }))
       }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStation])
   /**
-   * stationList, routeList 가 변경되었을 때 stationItems(모아둔 꾸러미) 내부 변경
+   * st      ationList, routeList 가 변경되었을 때 stationItems(모아둔 꾸러미) 내부 변경
    */
   useEffect(() => {
     if (!isRouteDetailLoading && !isRouteDetailPending) {
       if (!isStationListLoading) {
+        setSelectedStation(-1)
         setStationItems((prev) => ({
           ...prev,
           stationList: [...stationList],
@@ -221,7 +235,8 @@ export default function RouteDetailSlide({
             let isSame = false
             routeDetail.stationList.forEach((station: Station) => {
               if (
-                station.childList!.some(
+                station.academyChildList &&
+                station.academyChildList.some(
                   (stationChild) =>
                     stationChild.academyChildId === child.academyChildId,
                 )
@@ -232,11 +247,11 @@ export default function RouteDetailSlide({
             if (!isSame) tempChildList.push(child)
           })
           return {
-            childList: [...tempChildList],
+            academyChildList: [...tempChildList],
             selectedChildList: [],
           }
         }
-        return { childList: [], selectedChildList: [] }
+        return { academyChildList: [], selectedChildList: [] }
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -246,7 +261,7 @@ export default function RouteDetailSlide({
   useEffect(() => {
     if (!isChildListLoading && childList) {
       setChildItems({
-        childList: [...childList],
+        academyChildList: [...childList],
         selectedChildList: [],
       })
     }
@@ -263,7 +278,7 @@ export default function RouteDetailSlide({
     setStationItems((prev) => {
       prev.selectedStationList?.forEach((station: Station) => {
         if (station.id === selectedStation) {
-          station.childList = [...childItems['selectedChildList']]
+          station.academyChildList = [...childItems['selectedChildList']]
         }
       })
       return { ...prev }

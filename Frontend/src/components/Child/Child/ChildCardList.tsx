@@ -3,13 +3,13 @@ import ChildCard from '@components/Child/Child/ChildCard'
 import { ChildInfo } from '@types'
 
 interface Props {
-  childList: ChildInfo[]
+  academyChildList: ChildInfo[]
 }
 
-export default function ChildCardList({ childList }: Props) {
+export default function ChildCardList({ academyChildList }: Props) {
   return (
     <div className="grid grid-cols-6 gap-4">
-      {childList.map((child: ChildInfo) => (
+      {academyChildList.map((child: ChildInfo) => (
         <ChildCard key={child.academyChildId} childInfo={child} />
       ))}
     </div>
