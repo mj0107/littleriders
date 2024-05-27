@@ -3,7 +3,9 @@
 <br />
 <div align="center">
   <br />
+
   ![image](https://github.com/mj0107/littleriders/assets/61671704/198b3768-a1a9-47c2-b486-5333d427587e)
+
   <br />
 </div>
 <div align="center">
@@ -56,13 +58,13 @@
 <br>
 
 **2. 운행중인 셔틀의 실시간 위치 확인**
-![실시간위치](https://github.com/mj0107/littleriders/assets/61671704/5bc03fc3-b2ec-44c6-8610-56b8e1e22315)
+<img src="https://github.com/mj0107/littleriders/assets/61671704/5bc03fc3-b2ec-44c6-8610-56b8e1e22315" style="width:100%" />
 <br>
 
 **3. 원생의 승차/하차 정보 확인**
 | <center> 승차 </center> | <center> 하차 </center> |
 | :---------------------------------------------------------: | :---------------------------------------------------------: |
-| ![승차마커클릭gif](https://github.com/mj0107/littleriders/assets/61671704/9ee4579e-cb0e-4432-8dae-f0c5f8e79367) | ![하차마커클릭gif](https://github.com/mj0107/littleriders/assets/61671704/574e30be-6ba9-49ea-98e0-2e9cb95c9561) | 
+| ![승차마커클릭gif](https://github.com/mj0107/littleriders/assets/61671704/9ee4579e-cb0e-4432-8dae-f0c5f8e79367) | <img src="https://github.com/mj0107/littleriders/assets/61671704/574e30be-6ba9-49ea-98e0-2e9cb95c9561" style="width:2000px;height:100%"> | 
 <br>
 
 **4.노선 등록** <br>
