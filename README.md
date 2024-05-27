@@ -3,7 +3,7 @@
 <br />
 <div align="center">
   <br />
-  ![image](/uploads/0463df9b988a418076689f1bba8b57dd/image.png)
+  ![image](https://github.com/mj0107/littleriders/assets/61671704/198b3768-a1a9-47c2-b486-5333d427587e)
   <br />
 </div>
 <div align="center">
@@ -28,7 +28,7 @@
 <br>
 
 ## 🎥 소개 영상
-[![썸네일](/uploads/b8fda35da39da7ccff4e8f3712d68220/20240523_092154.png)](https://youtu.be/ZXtTVAO5JEs)
+[![썸네일](https://github.com/mj0107/littleriders/assets/61671704/fa5f8e52-bcb1-4e58-9027-964513616c15)](https://youtu.be/ZXtTVAO5JEs)
 <br>
 <div align="center">(위 썸네일을 클릭하면 Youtube로 이동됩니다.)</div>
 
@@ -52,21 +52,21 @@
 <br>
 
 **1. 셔틀 운행 시작 알림 수신**
-![운행시작gif](/uploads/4a526683873ee6597aee8ae5222388b8/운행시작gif.gif)
+![운행시작gif](https://github.com/mj0107/littleriders/assets/61671704/248a0ac0-c9ee-4ab6-b3f9-949bd6f85fea)
 <br>
 
 **2. 운행중인 셔틀의 실시간 위치 확인**
-![실시간위치video](/uploads/bf5b5022d64948ec25ff12a44206de2b/실시간위치video.gif)
+![실시간위치](https://github.com/mj0107/littleriders/assets/61671704/5bc03fc3-b2ec-44c6-8610-56b8e1e22315)
 <br>
 
 **3. 원생의 승차/하차 정보 확인**
 | <center> 승차 </center> | <center> 하차 </center> |
 | :---------------------------------------------------------: | :---------------------------------------------------------: |
-| ![승차마커클릭gif](/uploads/f4ff6e26ed9946917e9fc0e64f945cb7/승차마커클릭gif.gif) | ![하차마커클릭gif](/uploads/f69b204940354ee7e61bb058d0159a2b/하차마커클릭gif.gif) | 
+| ![승차마커클릭gif](https://github.com/mj0107/littleriders/assets/61671704/9ee4579e-cb0e-4432-8dae-f0c5f8e79367) | ![하차마커클릭gif](https://github.com/mj0107/littleriders/assets/61671704/574e30be-6ba9-49ea-98e0-2e9cb95c9561) | 
 <br>
 
 **4.노선 등록** <br>
-![노선_추가_4배속](/uploads/2565fe2ea7bb419f78f3d437a321d1fc/노선_추가_4배속.gif)
+![노선_추가_4배속](https://github.com/mj0107/littleriders/assets/61671704/449e4ddc-f495-4605-b1e7-70c1cc6cafc2)
 
 <br>
 
@@ -82,7 +82,7 @@
 
 | <center> 현 상황 문자 수신 </center> | <center> 자녀 실시간, 승차/하차 위치 보기 </center> |
 | :---------------------------------------------------------: | :---------------------------------------------------------: |
-| ![학부모수신메세지](/uploads/ebadced9b33bf2ce3825826d36e98f30/image.png) | ![자녀실시간위치](/uploads/7a872d3704a310811b4edb065d8ce009/image.png) | 
+| ![학부모수신메세](https://github.com/mj0107/littleriders/assets/61671704/19146fee-7e1e-4b86-acb4-e679d8555fe2) | ![자녀실시간위치](https://github.com/mj0107/littleriders/assets/61671704/399fcc5d-7838-4895-b1cd-6bd870775ab5) | 
 
 <br>
 
