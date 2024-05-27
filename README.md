@@ -58,6 +58,7 @@
 <br>
 
 **2. 운행중인 셔틀의 실시간 위치 확인**
+<br>
 <img src="https://github.com/mj0107/littleriders/assets/61671704/5bc03fc3-b2ec-44c6-8610-56b8e1e22315" style="width:100%" />
 <br>
 
